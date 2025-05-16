@@ -1,0 +1,72 @@
+# LLM Safety Steering Paper Reproduction Configuration
+
+model:
+  # Model to use for the experiment
+  # For actual reproduction, use meta-llama/Llama-3.1-8B-Instruct
+  # For quick testing, use a smaller model
+  name: "meta-llama/Llama-3.1-8B-Instruct"  # or "meta-llama/Llama-3.2-1B-Instruct" for quick testing
+  revision: "main"
+  device: "cuda"  # Use "cpu" if no GPU is available
+  dtype: "bfloat16"  # Use "float32" for CPU
+
+controller:
+  # Controller configuration
+  save_path: "models/controller.pt"
+  input_layers: [-4, -3, -2, -1]  # Use last 4 layers as input
+  patch_scale_factor: 4.0  # Strength of the steering intervention
+  hidden_dim: 1024  # Hidden dimension of the controller
+  training_epochs: 10
+  batch_size: 8
+  learning_rate: 5e-5
+
+data:
+  # Datasets for training the controller
+  harmful_dataset: "Anthropic/hh-rlhf"
+  harmful_split: "train"
+  harmful_column: "rejected"
+  harmful_samples: 500  # Reduce for faster training
+  
+  # Using tatsu-lab/alpaca as specified in the project requirements
+  benign_dataset: "tatsu-lab/alpaca"
+  benign_split: "train"
+  benign_column: "instruction"
+  benign_samples: 500  # Reduce for faster training
+
+benchmarks:
+  # Benchmark configuration
+  run_benchmarks: true
+  # Only using the three benchmarks specified in the project requirements
+  benchmarks_to_run: ["toxicchat", "jailbreak", "advbench"]
+  sample_size: 50  # Number of samples per benchmark
+  results_dir: "results"
+  max_new_tokens: 256
+
+refusal_direction:
+  # Tokens used to compute the refusal direction
+  refusal_tokens:
+    - "I apologize"
+    - "I'm sorry"
+    - "I cannot"
+    - "I can't"
+    - "I am unable"
+    - "I'm not able"
+    - "I am not able"
+    - "I don't"
+    - "I do not"
+    - "against my"
+    - "ethical guidelines"
+    - "programmed to"
+    - "designed to"
+  
+  answer_tokens:
+    - "Sure"
+    - "Here"
+    - "I'll"
+    - "I will"
+    - "I'd be happy"
+    - "I would be happy"
+    - "I can help"
+    - "Of course"
+    - "Certainly"
+    - "Here's"
+    - "Here is"
