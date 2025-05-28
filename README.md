@@ -27,11 +27,7 @@ This repository contains the code implementation supporting the research paper, 
 
 ### Setup
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/llm-safety-steering.git
-cd llm-safety-steering
-```
+1. Clone the repository
 
 2. Install the package:
 ```bash
