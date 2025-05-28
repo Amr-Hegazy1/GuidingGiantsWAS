@@ -1,20 +1,24 @@
-# LLM Safety Steering
+# Guiding Giants: Lightweight Controllers for Weighted Activation Steering in LLMs
 
-A modular framework for steering Large Language Models (LLMs) to provide safe responses to potentially harmful prompts. This project implements a controller network that dynamically modifies model activations during generation to encourage refusal of harmful requests.
+This repository contains the official implementation for the research paper: "[Guiding Giants: Lightweight Controllers for Weighted Activation Steering in LLMs](https://arxiv.org/abs/2505.20309)" (Amr Hegazy, Mostafa Elhoushi, Amr Alanwar, arXiv:2505.20309v1).
+
+Our work introduces Weighted Activation Steering (WAS), a novel approach using a lightweight, trainable controller network to guide Large Language Model (LLM) behavior at inference time. This controller dynamically modulates LLM activations to encourage safer responses, such as refusing harmful requests, without altering the base model's parameters.
 
 ## Overview
 
-LLM Safety Steering is a research project that enhances the safety of large language models by implementing dynamic activation steering. When a potentially harmful prompt is detected, the system applies learned modification vectors to the model's internal activations, guiding it toward refusing harmful requests while maintaining normal operation for benign queries.
+The core idea is to train a small controller network that observes specific intermediate LLM activations and predicts a global scaling factor and layer-specific weights. These outputs then dynamically adjust the intensity of a pre-computed "refusal direction" steering patch applied across the LLM's layers during generation. This allows for nuanced, layer-aware interventions, primarily activating steering for harmful inputs while preserving performance on benign prompts.
 
-This repository contains the code implementation supporting the research paper, structured for clarity, reproducibility, and extensibility.
+This repository provides the code for Weighted Activation Steering (WAS), including controller training, inference with steering, and benchmark evaluation, structured for clarity, reproducibility, and extensibility.
 
 ## Key Features
 
-- **Dynamic Activation Steering**: Modifies model activations during inference using a trainable controller
-- **Weighted Layer Control**: Allows the controller to learn which layers to modify for optimal intervention
-- **Comprehensive Benchmarking**: Multiple benchmark suites to evaluate safety across diverse scenarios
-- **Interactive Testing**: Test the model with and without steering using custom prompts
-- **Modular Architecture**: Well-organized codebase following software engineering best practices
+-   **Dynamic Activation Steering**: Employs a lightweight, trainable controller network that modulates LLM activations during inference by predicting a scalar magnitude and per-layer weights.
+-   **Weighted Layer Control**: The controller learns to apply nuanced, layer-aware interventions, dynamically determining the intensity of a steering patch across different layers.
+-   **Targeted Harmful Content Refusal**: Trained to discriminate between harmful and benign prompts, activating steering primarily for harmful inputs to increase refusal rates.
+-   **Preservation of General Capabilities**: Designed to minimize impact on LLM performance for benign tasks.
+-   **No Base Model Modification**: Achieves behavioral modification without altering the original LLM parameters, operating on a frozen base model.
+-   **Comprehensive Benchmarking**: Includes evaluation on safety benchmarks like ToxicChat, In-The-Wild Jailbreak Prompts, and AdvBench.
+-   **Modular Architecture**: Organized codebase for ease of understanding and extension.
 
 ## Installation
 
@@ -27,7 +31,11 @@ This repository contains the code implementation supporting the research paper, 
 
 ### Setup
 
-1. Clone the repository
+1. Clone the repository:
+```bash
+git clone https://github.com/Amr-Hegazy1/GuidingGiantsWAS
+cd GuidingGiantsWAS
+```
 
 2. Install the package:
 ```bash
@@ -164,4 +172,25 @@ See the [Reproduction Guide](docs/reproduction.md) for more details.
 ## Evaluation Metrics
 
 The primary evaluation metric is the **refusal rate**, calculated using an LLM-based detector that determines whether a model response constitutes a refusal. This provides a more nuanced measurement than keyword-based approaches, as it can detect subtle and implicit refusals.
+
+## Citation
+
+If you use this work, please cite the paper:
+
+```bibtex
+@misc{hegazy2025guidinggiantslightweightcontrollers,
+      title={Guiding Giants: Lightweight Controllers for Weighted Activation Steering in LLMs}, 
+      author={Amr Hegazy and Mostafa Elhoushi and Amr Alanwar},
+      year={2025},
+      eprint={2505.20309},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2505.20309}, 
+}
+```
+
+## Warning
+
+This paper and associated code deal with potentially offensive and harmful text as part of the research into LLM safety.
+
 
