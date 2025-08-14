@@ -37,7 +37,7 @@ benchmarks:
   run_benchmarks: true
   # Only using the three benchmarks specified in the project requirements
   benchmarks_to_run: ["toxicchat", "jailbreak", "advbench"]
-  sample_size: 50  # Number of samples per benchmark
+  sample_size: 50000  # Number of samples per benchmark
   results_dir: "results"
   max_new_tokens: 256
 
